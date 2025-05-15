@@ -33,6 +33,7 @@ class CreateUserAPI(APIView):
         serializer.is_valid(raise_exception=True)
         
         user = User.objects.create_user(**serializer.validated_data)
+        login(request, user)
         return Response(data={"Created user"}, status=status.HTTP_201_CREATED) # TODO not fully implemented yet
     
 
