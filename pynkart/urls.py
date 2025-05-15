@@ -1,23 +1,52 @@
-"""
-URL configuration for pynkart project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from pynkauth.apis import (
+    CreateUserAPI, LoginUserAPI, GetUserDetailsAPI, LogoutUserAPI, SetUserSecretAPI
+)
 
+# # pynkarts patterns
+# itempatterns = [
+#     path("list/", ItemsListApi.as_view(), name="paginated_all_items"),
+#     path("listuser/<str:username>", UserItemsListApi.as_view(), name="paginated_user_items"),
+#     path("get/<int:item_code>/", ItemsGetApi.as_view(), name="select_item"),
+#     path("create/", ItemsCreateApi.as_view(), name="create_item"),
+#     path("delist/", ItemsDelistAPI.as_view(), name="delist_item"),
+#     path("update/", ItemsUpdateAPI.as_view(), name="update_item"),
+# ]
+
+# # iph patterns
+# iphpatterns = [
+#     path("list/", IPHListApi.as_view(), name="paginated_all_iph"),
+#     path("get/<int:order_id>/", IPHGetApi.as_view(), name="select_iph"),
+#     path("create/", IPHCreateApi.as_view(), name="create_totalcost_iph"),
+#     path("update/", IPHUpdateStatusApi.as_view(), name="update_status_iph"),
+#     path("cancel/", IPHCancelApi.as_view(), name="cancel_iph"),
+#     path("complete/", IPHCompleteApi.as_view(), name="complete_iph"),
+# ]
+
+# # ish patterns
+# ishpatterns = [
+#     path("get/", ISHListApi.as_view(), name="paginated_all_ish"),
+#     path("get/<int:order_id>/", ISHGetApi.as_view(), name="select_iph"),
+#     path("create/", ISHCreateApi.as_view(), name="create_totalprice_iph"),
+# ]
+
+
+# auth patterns
+authpatterns = [
+    path("create/", CreateUserAPI.as_view(), name="create_user"),
+    path("get/<str:username>", GetUserDetailsAPI.as_view(), name="get_user"),
+    path("login/", LoginUserAPI.as_view(), name="login"),
+    path("logout/", LogoutUserAPI.as_view(), name="logout"),
+    path("secret_set/", SetUserSecretAPI.as_view(), name="secret_set"),
+]
+
+
+# Global patterns
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # path("items/", include((itempatterns, "items"))),
+    # path("iph/", include((iphpatterns, "item_procurement_history"))),
+    # path("ish/", include((ishpatterns, "item_sales_history"))),
+    path("users/", include((authpatterns, "authentication")))
 ]
