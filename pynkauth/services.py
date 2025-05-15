@@ -1,7 +1,7 @@
 from django.db import transaction
 
-from estore_back.settings import ENCRYPTION_KEY
-from izauth.models import UserSettings
+from pynkart.settings import SECRET_KEY
+from pynkauth.models import UserSettings
 
 
 @transaction.atomic
