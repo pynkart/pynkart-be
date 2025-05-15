@@ -1,32 +1,17 @@
-# Use the official Python runtime image
-FROM python:3.12
- 
-# Create the app directory
-RUN mkdir /pynkart
- 
-# Set the working directory inside the container
-WORKDIR /pynkart
- 
-# Set environment variables 
-# Prevents Python from writing pyc files to disk
-ENV PYTHONDONTWRITEBYTECODE=1
-#Prevents Python from buffering stdout and stderr
-ENV PYTHONUNBUFFERED=1 
- 
-# Upgrade pip
-RUN pip install --upgrade pip 
- 
-# Copy the Django project  and install dependencies
-COPY requirements.txt  /pynkart/
- 
-# run this command to install all dependencies 
-RUN pip install --no-cache-dir -r requirements.txt
- 
-# Copy the Django project to the container
-COPY . /pynkart/
- 
-# Expose the Django port
-EXPOSE 8000
- 
-# Run Django’s development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# pull official base image
+FROM python:3.11.4-slim-buster
+
+# set work directory
+WORKDIR /usr/src/app
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
+RUN pip install -r requirements.txt
+
+# copy project
+COPY . .
