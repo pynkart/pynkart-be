@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from pynkauth.apis import (
-    CreateUserAPI, LoginUserAPI, GetUserDetailsAPI, LogoutUserAPI, SetUserSecretAPI
+    CreateUserAPI, LoginUserAPI, GetUserDetailsAPI, LogoutUserAPI, AuthenticatedAPI
 )
 
 # # pynkarts patterns
@@ -38,7 +38,8 @@ authpatterns = [
     path("get/<str:username>", GetUserDetailsAPI.as_view(), name="get_user"),
     path("login/", LoginUserAPI.as_view(), name="login"),
     path("logout/", LogoutUserAPI.as_view(), name="logout"),
-    path("secret_set/", SetUserSecretAPI.as_view(), name="secret_set"),
+    path("authenticated/", AuthenticatedAPI.as_view(), name="is_authenticate")
+    # path("secret_set/", SetUserSecretAPI.as_view(), name="secret_set"),
 ]
 
 

@@ -57,6 +57,15 @@ class GetUserDetailsAPI(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+class AuthenticatedAPI(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request: Request):
+        return Response(data={"detail" : "You are authenticated."}, status=status.HTTP_200_OK)
+
+    
+
 class LoginUserAPI(APIView):
     class InputSerializer(serializers.Serializer):
         username = serializers.CharField()
