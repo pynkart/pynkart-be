@@ -39,7 +39,6 @@ authpatterns = [
     path("login/", LoginUserAPI.as_view(), name="login"),
     path("logout/", LogoutUserAPI.as_view(), name="logout"),
     path("authenticated/", AuthenticatedAPI.as_view(), name="is_authenticate")
-    # path("secret_set/", SetUserSecretAPI.as_view(), name="secret_set"),
 ]
 
 
