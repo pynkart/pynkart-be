@@ -19,7 +19,6 @@ DEBUG = bool(os.environ.get("DEBUG"))
 # Allowed Hosts
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","127.0.0.1").split(",")
 
-SESSION_ENGINE = "django.contrib.sessions.backends.file"
 # SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 # Application definition
