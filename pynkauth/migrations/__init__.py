@@ -1,0 +1,1 @@
+from pynkauth.models import AbstractUserOwnedModel

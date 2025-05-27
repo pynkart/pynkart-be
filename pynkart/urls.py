@@ -4,7 +4,7 @@ from pynkauth.apis import (
     CreateUserAPI, LoginUserAPI, GetUserDetailsAPI, LogoutUserAPI, AuthenticatedAPI
 )
 from pynkmail.apis import (
-    SetEmailSettingsAPI
+    SetEmailSettingsAPI, CreateEmailFormatAPI
 )
 
 # # pynkarts patterns
@@ -46,7 +46,8 @@ authpatterns = [
 
 # mail patterns
 mailpatterns = [
-    path("setsetting/", SetEmailSettingsAPI.as_view(), name="set_or_create_settings")
+    path("setsetting/", SetEmailSettingsAPI.as_view(), name="set_or_create_settings"),
+    path("createformat/", CreateEmailFormatAPI.as_view(), name="create_format")
 ]
 
 # Global patterns

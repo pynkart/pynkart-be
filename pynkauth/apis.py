@@ -1,6 +1,3 @@
-# Izauth imports --
-from pynkauth.services import set_email_secrets
-
 # DRF imports
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -97,34 +94,3 @@ class LogoutUserAPI(APIView):
     def get(self, request: Request):
         logout(request)
         return Response(data={"detail" : "Successfully logged out"}, status=status.HTTP_200_OK)
-
-
-class SetUserSecretAPI(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
-    
-    class InputSerializer(serializers.Serializer):
-        email = serializers.EmailField()
-        secret_key = serializers.CharField()
-        
-        def validate(self, data):
-            smtp_server = smtplib.SMTP(host="smtp.gmail.com", port=587) # TODO replace with a global server
-            smtp_server.starttls()
-            try:
-                smtp_server.login(user=data["email"], password=data["secret_key"])
-            except Exception as e:
-                print(e)
-                raise serializers.ValidationError("Email or key is invalid.")
-            
-            return {
-                "email": data["email"],
-                "secret_key": data["secret_key"]
-            }
-    
-    def post(self, request: Request):
-        serializer = self.InputSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        email_settings = set_email_secrets(**serializer.validated_data)
-        
-        return Response(data="created", status=status.HTTP_202_ACCEPTED)

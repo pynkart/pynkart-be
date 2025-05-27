@@ -6,6 +6,7 @@ class UserEmailSettings(AbstractUserOwnedModel):
     SecretKey = models.CharField(max_length=64) # Default is encrypted using mat-mul with entered password and actual key
     
 class UserEmailFormats(AbstractUserOwnedModel):
+    FormatID = models.AutoField(primary_key=True)
     FormatTitle = models.CharField(max_length=64)
     FormatBody = models.CharField(max_length=2048)
     
