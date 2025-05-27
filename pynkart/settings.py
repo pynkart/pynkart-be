@@ -19,7 +19,12 @@ DEBUG = bool(os.environ.get("DEBUG"))
 # Allowed Hosts
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","127.0.0.1").split(",")
 
-# SESSION_ENGINE = "django.contrib.sessions.backends.db"
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+# Session Engine (Where sessions are stored)
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 # Application definition
 INSTALLED_APPS = [

@@ -15,7 +15,7 @@ from pynkseller.pagination import (
 )
 
 from pynkmail.services import (
-    setting_create_or_set, format_create
+    setting_create_or_set, format_create, validate_gkey_task
 )
 
 
@@ -31,23 +31,11 @@ class SetEmailSettingsAPI(APIView):
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
+        if (not validate_gkey_task(**serializer.validated_data)):
+            return Response(data="Key is invalid", status=status.HTTP_406_NOT_ACCEPTABLE)
+        
         setting = setting_create_or_set(**serializer.validated_data, user=request.user)
         return Response(data="Setting success.",status=status.HTTP_201_CREATED)
-
-"""
-def validate(self, data):
-    smtp_server = smtplib.SMTP(host="smtp.gmail.com", port=587) # TODO replace with a global server
-    smtp_server.starttls()
-    try:
-        smtp_server.login(user=data["email"], password=data["secret_key"])
-    except Exception as e:
-        print(e)
-        raise serializers.ValidationError("Email or key is invalid.")
-    
-    return {
-        "email": data["email"],
-        "secret_key": data["secret_key"]
-"""
 
 
 class CreateEmailFormatAPI(APIView):
