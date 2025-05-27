@@ -57,7 +57,7 @@ def item_create(
     # Cancels every IPH not completed that is associated with the item (removes all incoming qty)
     # Creates an ISH equal to the current qty (if current qty is above 0)
     # Sets item to delist
-    
+
   
 @transaction.atomic
 def item_update(

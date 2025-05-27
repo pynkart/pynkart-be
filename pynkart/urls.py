@@ -3,6 +3,9 @@ from django.urls import path, include
 from pynkauth.apis import (
     CreateUserAPI, LoginUserAPI, GetUserDetailsAPI, LogoutUserAPI, AuthenticatedAPI
 )
+from pynkmail.apis import (
+    SetEmailSettingsAPI
+)
 
 # # pynkarts patterns
 # itempatterns = [
@@ -41,10 +44,15 @@ authpatterns = [
     path("authenticated/", AuthenticatedAPI.as_view(), name="is_authenticate")
 ]
 
+# mail patterns
+mailpatterns = [
+    path("setsetting/", SetEmailSettingsAPI.as_view(), name="set_or_create_settings")
+]
 
 # Global patterns
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("mail/", include((mailpatterns, "mail"))),
     # path("items/", include((itempatterns, "items"))),
     # path("iph/", include((iphpatterns, "item_procurement_history"))),
     # path("ish/", include((ishpatterns, "item_sales_history"))),

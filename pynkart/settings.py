@@ -20,6 +20,7 @@ DEBUG = bool(os.environ.get("DEBUG"))
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS","127.0.0.1").split(",")
 
 SESSION_ENGINE = "django.contrib.sessions.backends.file"
+# SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 # Application definition
 INSTALLED_APPS = [
@@ -31,7 +32,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     "rest_framework",
-    "pynkauth"
+    "pynkauth",
+    "pynkseller",
+    "pynkmail",
 ]
 
 MIDDLEWARE = [
@@ -47,9 +50,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-        "185.132.125.169",
-        "api.pynkart.org",
-        "localhost",
+        "http://185.132.125.169",
+        "https://api.pynkart.org",
+        # "localhost",
         "http://81.153.128.227:3000"
 ]
 
@@ -59,12 +62,12 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_COOKIE_SECURE = True
+# Only secure on production, will break on dev-mode
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 
-SESSION_COOKIE_SECURE = True
-
+# Remove to change to "lax" mode
 CSRF_COOKIE_SAMESITE = 'None'
-
 SESSION_COOKIE_SAMESITE = "None"
 
 REST_FRAMEWORK = {
