@@ -5,6 +5,7 @@ from rest_framework.request import Request
 from rest_framework import serializers, status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser
 
 # Django imports --
 from django.shortcuts import get_object_or_404
@@ -15,7 +16,8 @@ from pynkseller.pagination import (
 )
 
 from pynkmail.services import (
-    setting_create_or_set, format_create, validate_gkey_task
+    setting_create_or_set, format_create, 
+    validate_gkey_task, validate_df_task
 )
 
 
@@ -53,3 +55,27 @@ class CreateEmailFormatAPI(APIView):
         format = format_create(**serializers.validated_data, user=request.user)
         return Response(data="Create success",status=status.HTTP_201_CREATED)
         
+        
+class BulkSendEmailsAPI(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser]
+    
+    class InputSerializer(serializers.Serializer):
+        format_ID = serializers.IntegerField()
+        file = serializers.FileField()
+    
+    serializer_class = InputSerializer
+        
+    def post(self, request:Request):
+        serializers = self.InputSerializer(data=request.data)
+        serializers.is_valid(raise_exception=True)
+        file_csv = request.FILES.get('file')
+        
+        print(request.data)
+        valid, df = validate_df_task(dt = file_csv)
+        if (valid == False):
+            return Response(data="Table is invalid", status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response(data="Table is valid", status=status.HTTP_406_NOT_ACCEPTABLE)
+
+#{"format_ID":"1","data_table":"random,"}

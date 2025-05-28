@@ -5,6 +5,8 @@ from django.db import transaction
 from celery import shared_task
 import smtplib
 from time import sleep
+from io import StringIO
+import pandas as pd
 
 
 # --- Aux Function ---
@@ -44,4 +46,31 @@ def validate_gkey_task(
     except Exception as e:
         print(e)
         return False
+    
+    
+@shared_task
+def validate_df_task(
+    dt: str
+):
+    try:
+        df = pd.read_csv(dt)
+        if "email" in df.columns:
+            return True, df
+        return False, None
+    except Exception as e:
+        return False, None
+    
+    
+@shared_task
+def send_email_task(
+    title: str, body: str, df: pd.DataFrame, user: User
+):
+    router_server = smtplib.SMTP(host="smtp.gmail.com", port=587)
+    router_server.starttls()
+    settings = UserEmailSettings.objects.get(UserID=user)
+    try:
+        router_server.login(user=settings.LoginEmail, password=settings.SecretKey)
+    except Exception as e:
+        print(settings.LoginEmail + " login failed.")
+        
     
