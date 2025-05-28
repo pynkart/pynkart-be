@@ -63,13 +63,17 @@ def validate_df_task(
     
 @shared_task
 def send_email_task(
-    title: str, body: str, df: pd.DataFrame, user: User
+    format_id: int, df: pd.DataFrame, user: User
 ):
     router_server = smtplib.SMTP(host="smtp.gmail.com", port=587)
     router_server.starttls()
+    
+    format = UserEmailFormats.objects.get(FormatID=format_id)
     settings = UserEmailSettings.objects.get(UserID=user)
+    
     try:
         router_server.login(user=settings.LoginEmail, password=settings.SecretKey)
+        print(format.FormatTitle)
     except Exception as e:
         print(settings.LoginEmail + " login failed.")
         

@@ -14,11 +14,11 @@ from django.http import Http404
 from pynkseller.pagination import (
     LimitOffsetPagination, get_paginated_response
 )
-
 from pynkmail.services import (
     setting_create_or_set, format_create, 
-    validate_gkey_task, validate_df_task
+    validate_gkey_task, validate_df_task, send_email_task
 )
+from pynkmail.models import (UserEmailFormats)
 
 
 class SetEmailSettingsAPI(APIView):
@@ -65,17 +65,21 @@ class BulkSendEmailsAPI(APIView):
         format_ID = serializers.IntegerField()
         file = serializers.FileField()
     
+    # For drf debug, will be removed
     serializer_class = InputSerializer
         
     def post(self, request:Request):
         serializers = self.InputSerializer(data=request.data)
         serializers.is_valid(raise_exception=True)
+        
         file_csv = request.FILES.get('file')
         
         print(request.data)
         valid, df = validate_df_task(dt = file_csv)
         if (valid == False):
             return Response(data="Table is invalid", status=status.HTTP_406_NOT_ACCEPTABLE)
-        return Response(data="Table is valid", status=status.HTTP_406_NOT_ACCEPTABLE)
+        
+        send_email_task(df=df, user=request.user, format_id=request.data.get("format_ID"))
+        return Response(data="Sent emails", status=status.HTTP_406_NOT_ACCEPTABLE)
 
 #{"format_ID":"1","data_table":"random,"}
