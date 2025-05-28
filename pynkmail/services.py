@@ -96,18 +96,30 @@ def send_email_task(
     # Iterate through all rows
     for row_values in zip(*columns_to_zip):
         msg = format.FormatBody
+        target = ""
+        
+        # Formatting message body
         # Not O(n^2) nested loop due to column never being bigger than 8
         for i in range(0, len(columns)):
+            # TODO janky code
+            if (columns[i] == "email"):
+                target = row_values[i]
             msg = msg.replace(f"[{columns[i]}]", row_values[i])
+        
+        # Formatting full message and sending email
+        full_msg = f"Subject: {format.FormatTitle}\n\n{msg}"
+        try:
+            router_server.sendmail(from_addr=settings.LoginEmail, to_addrs=target, msg=full_msg)
+        except Exception as e:
+            print(e)
+        
         print(msg)
         
         
-def format_message(
-    columns, values, body: str
-):
-    # Not O(n^2) nested loop due to column never being bigger than 8
-    for i in range(0, len(columns)):
-        body = body.replace(f"[{columns[i]}]", values[i])
-    return body
+def send_email(server:smtplib.SMTP, target, origin, full_msg):
+    try:
+        server.sendmail(from_addr=origin, to_addrs=target, msg=full_msg)
+        print("ok")
+    except Exception as e:
+        print(e)
         
-    

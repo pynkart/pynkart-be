@@ -83,7 +83,6 @@ class BulkSendEmailsAPI(APIView):
         # Validate Format with DF
         # valid2 = validate_format_task(df=df)
         
-        
         # Send Email
         send_email_task(df=df, user=request.user, format=format)
         return Response(data="Sent emails", status=status.HTTP_406_NOT_ACCEPTABLE)
