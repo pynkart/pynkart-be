@@ -16,7 +16,7 @@ from pynkseller.pagination import (
 )
 from pynkmail.services import (
     setting_create_or_set, format_create, 
-    validate_gkey_task, validate_df_task, send_email_task
+    validate_gkey_task, validate_df_task, validate_format_task, send_email_task
 )
 from pynkmail.models import (UserEmailFormats)
 
@@ -71,15 +71,21 @@ class BulkSendEmailsAPI(APIView):
     def post(self, request:Request):
         serializers = self.InputSerializer(data=request.data)
         serializers.is_valid(raise_exception=True)
-        
         file_csv = request.FILES.get('file')
+        format = UserEmailFormats.objects.get(FormatID=request.data.get("format_ID"))
         
-        print(request.data)
+        
+        # Validate DF
         valid, df = validate_df_task(dt = file_csv)
         if (valid == False):
             return Response(data="Table is invalid", status=status.HTTP_406_NOT_ACCEPTABLE)
         
-        send_email_task(df=df, user=request.user, format_id=request.data.get("format_ID"))
+        # Validate Format with DF
+        # valid2 = validate_format_task(df=df)
+        
+        
+        # Send Email
+        send_email_task(df=df, user=request.user, format=format)
         return Response(data="Sent emails", status=status.HTTP_406_NOT_ACCEPTABLE)
 
 #{"format_ID":"1","data_table":"random,"}

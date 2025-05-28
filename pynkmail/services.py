@@ -4,8 +4,6 @@ from pynkmail.models import UserEmailSettings, UserEmailFormats
 from django.db import transaction
 from celery import shared_task
 import smtplib
-from time import sleep
-from io import StringIO
 import pandas as pd
 
 
@@ -60,21 +58,56 @@ def validate_df_task(
     except Exception as e:
         return False, None
     
+
+@shared_task
+def validate_format_task(
+    df: pd.DataFrame, format: UserEmailFormats
+):
+    pass
+    # prune for [] substrings to prevent forced crashes
+    
     
 @shared_task
 def send_email_task(
-    format_id: int, df: pd.DataFrame, user: User
+    format: UserEmailFormats, df: pd.DataFrame, user: User
 ):
+    # Create and start server
     router_server = smtplib.SMTP(host="smtp.gmail.com", port=587)
     router_server.starttls()
     
-    format = UserEmailFormats.objects.get(FormatID=format_id)
+    # Attempt login
     settings = UserEmailSettings.objects.get(UserID=user)
-    
     try:
         router_server.login(user=settings.LoginEmail, password=settings.SecretKey)
         print(format.FormatTitle)
     except Exception as e:
         print(settings.LoginEmail + " login failed.")
+    
+    # Drop all empty "unnamed columns"
+    df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+    columns = df.columns.values
+    
+    columns_to_zip = [df[col] for col in columns]
+    
+    # TODO fix this hardcoded limit by using pruning methods above (this accounts for all columns pre-prune)
+    if len(columns) > 8:
+        raise Exception("Too many columns")
+    
+    # Iterate through all rows
+    for row_values in zip(*columns_to_zip):
+        msg = format.FormatBody
+        # Not O(n^2) nested loop due to column never being bigger than 8
+        for i in range(0, len(columns)):
+            msg = msg.replace(f"[{columns[i]}]", row_values[i])
+        print(msg)
+        
+        
+def format_message(
+    columns, values, body: str
+):
+    # Not O(n^2) nested loop due to column never being bigger than 8
+    for i in range(0, len(columns)):
+        body = body.replace(f"[{columns[i]}]", values[i])
+    return body
         
     
