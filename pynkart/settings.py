@@ -56,11 +56,13 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
         "http://185.132.125.169",
         "https://api.pynkart.org",
+        "https://seller.pynkart.org"
         # "localhost",
         "http://81.153.128.227:3000"
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+        "https://seller.pynkart.org",
         "http://81.153.128.227:3000"
 ]
 
