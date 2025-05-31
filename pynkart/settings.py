@@ -71,8 +71,8 @@ CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
 
 # Remove to change to "lax" mode
-CSRF_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SAMESITE = "None"
+# CSRF_COOKIE_SAMESITE = 'None'
+# SESSION_COOKIE_SAMESITE = "None"
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
