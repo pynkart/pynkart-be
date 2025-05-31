@@ -58,7 +58,7 @@ CORS_ALLOWED_ORIGINS = [
         "https://api.pynkart.org",
         "https://seller.pynkart.org"
         # "localhost",
-        "http://81.153.128.227:3000"
+        "http://81.153.128.227:3000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -67,6 +67,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 # Only secure on production, will break on dev-mode
 CSRF_COOKIE_SECURE = False
