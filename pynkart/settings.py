@@ -70,7 +70,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 # Only secure on production, will break on dev-mode
-CSRF_COOKIE_SECURE = bool(os.environ.get("COOKIE-SECURE"))
+CSRF_COOKIE_SECURE = bool(os.environ.get("COOKIE_SECURE"))
 SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE
 
 # Remove to change to "lax" mode
