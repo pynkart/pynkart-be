@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from pynkauth.apis import (
-    CreateUserAPI, LoginUserAPI, GetUserDetailsAPI, LogoutUserAPI, AuthenticatedAPI
+    CreateUserAPI, LoginUserAPI, GetUserDetailsAPI, LogoutUserAPI, AuthenticatedAPI, GetCsrfAPI
 )
 from pynkmail.apis import (
     SetEmailSettingsAPI, CreateEmailFormatAPI, BulkSendEmailsAPI
@@ -41,7 +41,8 @@ authpatterns = [
     path("get/<str:username>", GetUserDetailsAPI.as_view(), name="get_user"),
     path("login/", LoginUserAPI.as_view(), name="login"),
     path("logout/", LogoutUserAPI.as_view(), name="logout"),
-    path("authenticated/", AuthenticatedAPI.as_view(), name="is_authenticate")
+    path("authenticated/", AuthenticatedAPI.as_view(), name="is_authenticate"),
+    path("csrf/", GetCsrfAPI.as_view(), name="get_csrf")
 ]
 
 # mail patterns

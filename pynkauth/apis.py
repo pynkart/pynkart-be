@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
 from django.shortcuts import get_object_or_404
+from django.middleware.csrf import get_token
 from django.http import Http404
 
 # Python imports
@@ -61,7 +62,14 @@ class AuthenticatedAPI(APIView):
     def get(self, request: Request):
         return Response(data={"detail" : "You are authenticated."}, status=status.HTTP_200_OK)
 
-    
+
+class GetCsrfAPI(APIView):
+    def get(self, request: Request):
+        token = get_token(request)
+        response = Response(data={"Info":"Success - CSRF Sent"})
+        response["X-CSRFToken"] = token
+        return response
+
 
 class LoginUserAPI(APIView):
     class InputSerializer(serializers.Serializer):
