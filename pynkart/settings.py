@@ -70,12 +70,12 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 # Only secure on production, will break on dev-mode
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = bool(os.environ.get("COOKIE-SECURE"))
+SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE
 
 # Remove to change to "lax" mode
-# CSRF_COOKIE_SAMESITE = 'None'
-# SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SAMESITE = os.environ.get("SAMESITE")
+SESSION_COOKIE_SAMESITE = CSRF_COOKIE_SAMESITE
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
